@@ -1,0 +1,37 @@
+version: "4"
+services:
+  api:
+    build: ./api
+    restart: always
+    ports:
+      - "80:8000"
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    env_file:
+      - .env
+    volumes:
+      - ./api:/api
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -h ${POSTGRES_HOST} -p ${POSTGRES_PORT}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest

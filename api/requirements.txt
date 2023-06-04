@@ -1,0 +1,11 @@
+fastapi
+fastapi_redis_cache
+redis
+sqlalchemy
+sqlalchemy_utils
+slowapi
+passlib
+pyjwt
+python-decouple
+uvicorn
+psycopg2-binary
